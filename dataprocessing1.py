@@ -2,6 +2,8 @@ import os
 import numpy as np
 import sys
 import matplotlib.pyplot as plt
+from scipy.stats import chisquare
+
 
 f = open(os.getcwd() + '/data/' + '2009FinalPlaces.txt')
 lines = f.readlines()    
@@ -19,16 +21,30 @@ for line in lines:
         percs.append([float(x) for x in split])
 
 percs = np.array(percs)
-firstdig, seconddig, lastdig = [], [], []   
+firstdig, seconddig, lastdig = [], [], [] 
+firstDigObs = [0.0 for i in range(9)]
+lastDigObs = [0.0 for i in range(10)]  
+count = 0
 for county in counts:
     for number in county:
         if number[0] not in [str(x) for x in range(10)] or number == '0':
             continue
         else:
+            count += 1
             firstdig.append(int(number[0]))
+            firstDigObs[int(number[0]) - 1] += 1
             lastdig.append(int(number[-1]))
+            lastDigObs[int(number[-1]) - 1] += 1
             if len(number) > 1:
                 seconddig.append(int(number[1]))
+
+firstDigExp = count * np.array(([0.30103, 0.176091, 0.124939, 0.09691, 0.0791812, 0.0669468, 0.0579919, 0.0511525, 0.0457575]))
+lastDigExp = count * np.array(([0.1 for i in range(10)]))
+
+print lastDigObs
+print chisquare(firstDigObs, f_exp=firstDigExp)
+print chisquare(lastDigObs, f_exp=lastDigExp)
+
 
 # Figures 1-3 pull from the entire data set instead of just the number of votes 
 # for each of the candidates
