@@ -19,7 +19,3 @@ def simBenexp():
     plt.plot([firstdig.count(x) for x in range(1, 10)])
     plt.plot(np.array([np.log10(1 + 1 / float(x)) for x in range(1, 10)]) * len(firstdig))    
     plt.show()
-    
-    
-    
-    
